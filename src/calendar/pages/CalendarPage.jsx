@@ -1,24 +1,15 @@
-import { addHours, format, getDay, parse, startOfWeek } from 'date-fns';
-import { enUS } from 'date-fns/locale/en-US';
-import { Calendar, dateFnsLocalizer, Views } from 'react-big-calendar';
+import { addHours } from 'date-fns';
+import { useState } from 'react';
+
+import { Calendar, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-import { useState } from 'react';
-import { Navbar } from '../';
-const locales = {
-  'en-US': enUS,
-};
-const localizer = dateFnsLocalizer({
-  format,
-  parse,
-  startOfWeek,
-  getDay,
-  locales,
-});
+import { CalendarEventBox, Navbar } from '../';
+import { getMessagesEs, localizer } from '../../helpers';
 
 const events = [
   {
-    title: 'My birthday',
+    title: 'Buy a car',
     notes: 'Need buy a cake',
     start: new Date(),
     end: addHours(new Date(), 2),
@@ -30,22 +21,63 @@ const events = [
   },
 ];
 
+const getInitView = () => {
+  const storedView = localStorage.getItem('lastView');
+  return storedView || Views.MONTH;
+};
+
 export const CalendarPage = () => {
-  const [currentView, setCurrentView] = useState(Views.MONTH);
+  const [currentView, setCurrentView] = useState(getInitView());
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [language, setLanguage] = useState(false);
+
+  const onChangeLanguage = () => {
+    setLanguage((current) => !current);
+  };
+
+  const eventStyleGetter = (event, start, end, isSelected) => {
+    const style = {
+      backgroundColor: '#347CF7',
+      borderRadius: '0px',
+      opacity: 0.8,
+      color: 'white',
+    };
+
+    return {
+      style,
+    };
+  };
+
+  const onDoubleClick = (event) => {
+    console.log({ doubleClick: event });
+  };
+  const onSelect = (event) => {
+    console.log({ click: event });
+  };
+  const onViewChanged = (newView) => {
+    setCurrentView(newView);
+    localStorage.setItem('lastView', newView);
+  };
+
   return (
     <>
-      <Navbar />
+      <Navbar onChangeLanguage={onChangeLanguage} />
       <Calendar
+        culture={language && 'es'}
+        messages={language && getMessagesEs()}
         localizer={localizer}
         date={currentDate}
         view={currentView}
-        onView={setCurrentView}
+        onView={onViewChanged}
         onNavigate={setCurrentDate}
         events={events}
         startAccessor="start"
         endAccessor="end"
         style={{ height: 'calc(100vh - 80px)' }}
+        eventPropGetter={eventStyleGetter}
+        components={{ event: CalendarEventBox }}
+        onDoubleClickEvent={onDoubleClick}
+        onSelectEvent={onSelect}
       />
     </>
   );
