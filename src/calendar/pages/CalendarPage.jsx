@@ -5,7 +5,7 @@ import { Calendar, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import { CalendarEventBox, CalendarModal, Navbar } from '../';
-import { getMessagesEs, localizer } from '../../helpers';
+import { localizer } from '../../helpers';
 
 const events = [
   {
@@ -29,11 +29,6 @@ const getInitView = () => {
 export const CalendarPage = () => {
   const [currentView, setCurrentView] = useState(getInitView());
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [language, setLanguage] = useState(false);
-
-  const onChangeLanguage = () => {
-    setLanguage((current) => !current);
-  };
 
   const eventStyleGetter = (event, start, end, isSelected) => {
     const style = {
@@ -61,10 +56,8 @@ export const CalendarPage = () => {
 
   return (
     <>
-      <Navbar onChangeLanguage={onChangeLanguage} />
+      <Navbar />
       <Calendar
-        culture={language && 'es'}
-        messages={language && getMessagesEs()}
         localizer={localizer}
         date={currentDate}
         view={currentView}
@@ -79,7 +72,7 @@ export const CalendarPage = () => {
         onDoubleClickEvent={onDoubleClick}
         onSelectEvent={onSelect}
       />
-      <CalendarModal isSpanish={language} />
+      <CalendarModal />
     </>
   );
 };
