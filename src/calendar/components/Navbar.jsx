@@ -1,4 +1,5 @@
-export const Navbar = ({ onChangeLanguage }) => {
+export const Navbar = ({ onChangeLanguage, language }) => {
+  const buttonText = language ? 'Change Language' : 'Cambiar Idioma';
   return (
     <div className="navbar navbar-dark bg-dark mb-4 px-4">
       <span className="navbar-brand">
@@ -8,7 +9,7 @@ export const Navbar = ({ onChangeLanguage }) => {
 
       <button className="btn btn-outline-info" onClick={onChangeLanguage}>
         <i className="fas fa-language"></i>
-        <span> Change Language</span>
+        <span> {buttonText}</span>
       </button>
 
       <button className="btn btn-outline-danger">

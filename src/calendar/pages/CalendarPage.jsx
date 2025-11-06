@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Calendar, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-import { CalendarEventBox, Navbar } from '../';
+import { CalendarEventBox, CalendarModal, Navbar } from '../';
 import { getMessagesEs, localizer } from '../../helpers';
 
 const events = [
@@ -79,6 +79,7 @@ export const CalendarPage = () => {
         onDoubleClickEvent={onDoubleClick}
         onSelectEvent={onSelect}
       />
+      <CalendarModal isSpanish={language} />
     </>
   );
 };
