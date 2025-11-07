@@ -1,11 +1,10 @@
-import { addHours } from 'date-fns';
 import { useState } from 'react';
-
-import { Calendar, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-
+import { Calendar, Views } from 'react-big-calendar';
+import { addHours } from 'date-fns';
 import { CalendarEventBox, CalendarModal, Navbar } from '../';
 import { localizer } from '../../helpers';
+import { useUiStore } from '../../hooks';
 
 const events = [
   {
@@ -27,6 +26,7 @@ const getInitView = () => {
 };
 
 export const CalendarPage = () => {
+  const { openDateModal } = useUiStore();
   const [currentView, setCurrentView] = useState(getInitView());
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -44,7 +44,7 @@ export const CalendarPage = () => {
   };
 
   const onDoubleClick = (event) => {
-    console.log({ doubleClick: event });
+    openDateModal();
   };
   const onSelect = (event) => {
     console.log({ click: event });

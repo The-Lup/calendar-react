@@ -1,11 +1,7 @@
-import { addHours, differenceInSeconds } from 'date-fns';
-
-import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Modal from 'react-modal';
-import Swal from 'sweetalert2';
-import 'sweetalert2/dist/sweetalert2.min.css';
+import { useCalendarModal } from '../../hooks';
 import '../styles/modal.css';
 
 const customStyles = {
@@ -21,49 +17,19 @@ const customStyles = {
 Modal.setAppElement('#root');
 
 export const CalendarModal = () => {
-  const [isModalOpen, setIsModalOpen] = useState(true);
-  const [formValues, setFormValues] = useState({
-    title: 'JoPim',
-    notes: 'Hades',
-    start: new Date(),
-    end: addHours(new Date(), 2),
-  });
-
-  const onInputChange = ({ target }) => {
-    setFormValues({
-      ...formValues,
-      [target.name]: target.value,
-    });
-  };
-
-  const onDateChange = (event, changing) => {
-    setFormValues({
-      ...formValues,
-      [changing]: event,
-    });
-  };
-
-  const onCloseModal = () => {
-    console.log('Modal closed');
-    setIsModalOpen(false);
-  };
-
-  const onSubmit = (event) => {
-    event.preventDefault();
-    const difference = differenceInSeconds(formValues.end, formValues.start);
-    if (isNaN(difference) || difference <= 0) {
-      Swal.fire('Invalid dates. Please verify the dates you entered.');
-      return;
-    }
-    if (formValues.title.length <= 0) return;
-    console.log({ formValues });
-
-    //TODO: Close Modal, remove screen errors
-  };
+  const {
+    formValues,
+    tittleClass,
+    isDateModalOpen,
+    onInputChange,
+    onDateChange,
+    onCloseModal,
+    onSubmit,
+  } = useCalendarModal();
 
   return (
     <Modal
-      isOpen={isModalOpen}
+      isOpen={isDateModalOpen}
       onRequestClose={onCloseModal}
       style={customStyles}
       className="modal"
@@ -109,7 +75,7 @@ export const CalendarModal = () => {
           <label className="form-label fw-semibold">Event Title</label>
           <input
             type="text"
-            className="form-control"
+            className={`form-control ${tittleClass}`}
             placeholder="Title and Notes"
             name="title"
             autoComplete="off"
