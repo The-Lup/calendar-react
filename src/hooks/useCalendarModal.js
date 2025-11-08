@@ -4,17 +4,20 @@ import Swal from 'sweetalert2';
 import { useCalendarStore } from './useCalendarStore';
 import { useUiStore } from './useUiStore';
 
-const initialFormValues = {
-  title: '',
-  notes: '',
-  start: new Date(),
-  end: addHours(new Date(), 2),
+const initialFormValues = () => {
+  const now = new Date();
+  return {
+    title: '',
+    notes: '',
+    start: now,
+    end: addHours(now, 2),
+  };
 };
 
 export const useCalendarModal = () => {
   const { isDateModalOpen, closeDateModal } = useUiStore();
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const [formValues, setFormValues] = useState(initialFormValues);
+  const [formValues, setFormValues] = useState(initialFormValues());
   const { activeEvent, startSavingEvent } = useCalendarStore();
 
   const tittleClass = useMemo(() => {
@@ -24,7 +27,13 @@ export const useCalendarModal = () => {
 
   useEffect(() => {
     if (activeEvent !== null) {
-      setFormValues({ ...activeEvent });
+      setFormValues({
+        ...activeEvent,
+        start: new Date(activeEvent.start),
+        end: new Date(activeEvent.end),
+      });
+    } else {
+      setFormValues(initialFormValues());
     }
   }, [activeEvent]);
 

@@ -1,12 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { addHours } from 'date-fns';
 
+const now = new Date();
+
 const tempEvent = {
-  _id: new Date().getTime,
+  _id: now.getTime(),
   title: 'Buy a car',
   notes: 'Need buy a cake',
-  start: new Date(),
-  end: addHours(new Date(), 2),
+  start: new Date(now),
+  end: addHours(new Date(now, 2)),
   bgcolor: '#fafafa',
   user: {
     _id: '123',
@@ -25,10 +27,32 @@ export const calendarSlice = createSlice({
       state.activeEvent = payload;
     },
     onAddNewEvent: (state, { payload }) => {
-      state.events.push(payload);
+      const newEvent = {
+        ...payload,
+        start: new Date(payload.start), // Nueva instancia de Date
+        end: new Date(payload.end),
+      };
+
+      state.events.push(newEvent);
       state.activeEvent = null;
+    },
+    onUpdateEvent: (state, { payload }) => {
+      const updatedEvent = {
+        ...payload,
+        start: new Date(payload.start),
+        end: new Date(payload.end),
+      };
+
+      state.events = state.events.map((event) => {
+        if (event._id === updatedEvent._id) {
+          return payload;
+        }
+
+        return event;
+      });
     },
   },
 });
 
-export const { onSetActiveEvent, onAddNewEvent } = calendarSlice.actions;
+export const { onSetActiveEvent, onAddNewEvent, onUpdateEvent } =
+  calendarSlice.actions;
