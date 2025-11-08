@@ -1,24 +1,9 @@
 import { useState } from 'react';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Calendar, Views } from 'react-big-calendar';
-import { addHours } from 'date-fns';
-import { CalendarEventBox, CalendarModal, Navbar } from '../';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { CalendarEventBox, CalendarModal, FabAddNew, Navbar } from '../';
 import { localizer } from '../../helpers';
-import { useUiStore } from '../../hooks';
-
-const events = [
-  {
-    title: 'Buy a car',
-    notes: 'Need buy a cake',
-    start: new Date(),
-    end: addHours(new Date(), 2),
-    bgcolor: '#fafafa',
-    user: {
-      _id: '123',
-      name: 'Lup',
-    },
-  },
-];
+import { useCalendarStore, useUiStore } from '../../hooks';
 
 const getInitView = () => {
   const storedView = localStorage.getItem('lastView');
@@ -27,6 +12,7 @@ const getInitView = () => {
 
 export const CalendarPage = () => {
   const { openDateModal } = useUiStore();
+  const { events, setActiveEvent } = useCalendarStore();
   const [currentView, setCurrentView] = useState(getInitView());
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -47,7 +33,7 @@ export const CalendarPage = () => {
     openDateModal();
   };
   const onSelect = (event) => {
-    console.log({ click: event });
+    setActiveEvent(event);
   };
   const onViewChanged = (newView) => {
     setCurrentView(newView);
@@ -73,6 +59,7 @@ export const CalendarPage = () => {
         onSelectEvent={onSelect}
       />
       <CalendarModal />
+      <FabAddNew />
     </>
   );
 };

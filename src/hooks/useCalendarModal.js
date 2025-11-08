@@ -1,11 +1,12 @@
 import { addHours, differenceInSeconds } from 'date-fns';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Swal from 'sweetalert2';
+import { useCalendarStore } from './useCalendarStore';
 import { useUiStore } from './useUiStore';
 
 const initialFormValues = {
-  title: 'JoPim',
-  notes: 'Hades',
+  title: '',
+  notes: '',
   start: new Date(),
   end: addHours(new Date(), 2),
 };
@@ -14,11 +15,18 @@ export const useCalendarModal = () => {
   const { isDateModalOpen, closeDateModal } = useUiStore();
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formValues, setFormValues] = useState(initialFormValues);
+  const { activeEvent, startSavingEvent } = useCalendarStore();
 
   const tittleClass = useMemo(() => {
     if (!formSubmitted) return '';
-    return formValues.title.length > 0 ? 'is-valid' : 'is-invalid';
+    return formValues.title.length > 0 ? '' : 'is-invalid';
   }, [formValues.title, formSubmitted]);
+
+  useEffect(() => {
+    if (activeEvent !== null) {
+      setFormValues({ ...activeEvent });
+    }
+  }, [activeEvent]);
 
   const onInputChange = ({ target }) => {
     setFormValues({
@@ -38,7 +46,7 @@ export const useCalendarModal = () => {
     closeDateModal();
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
     setFormSubmitted(true);
 
@@ -53,12 +61,11 @@ export const useCalendarModal = () => {
       return;
     }
 
-    // Validación del título
     if (formValues.title.length <= 0) return;
 
-    console.log({ formValues });
-
-    //TODO: cerrar modal y limpiar errores
+    await startSavingEvent(formValues);
+    closeDateModal();
+    setFormSubmitted(false);
   };
 
   return {

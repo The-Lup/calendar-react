@@ -35,3 +35,25 @@ a {
 a:hover {
   color: #3e88d4;
 }
+
+/* FABS */
+.fab {
+  border-radius: 50%;
+  bottom: 25px;
+  position: fixed;
+  right: 25px;
+  width: 60px;
+  height: 60px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 0;
+  font-size: 24px;
+  color: white !important;
+}
+
+.fab:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 124, 247, 0.5);
+}
