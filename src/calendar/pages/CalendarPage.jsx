@@ -1,7 +1,13 @@
 import { useState } from 'react';
 import { Calendar, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { CalendarEventBox, CalendarModal, FabAddNew, Navbar } from '../';
+import {
+  CalendarEventBox,
+  CalendarModal,
+  FabAddNew,
+  FabDelete,
+  Navbar,
+} from '../';
 import { localizer } from '../../helpers';
 import { useCalendarStore, useUiStore } from '../../hooks';
 
@@ -12,7 +18,7 @@ const getInitView = () => {
 
 export const CalendarPage = () => {
   const { openDateModal } = useUiStore();
-  const { events, setActiveEvent } = useCalendarStore();
+  const { events, setActiveEvent, clearActiveEvent } = useCalendarStore();
   const [currentView, setCurrentView] = useState(getInitView());
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -29,7 +35,11 @@ export const CalendarPage = () => {
     };
   };
 
-  const onDoubleClick = (event) => {
+  const onSelectSlot = () => {
+    clearActiveEvent();
+  };
+
+  const onDoubleClick = () => {
     openDateModal();
   };
   const onSelect = (event) => {
@@ -57,9 +67,12 @@ export const CalendarPage = () => {
         components={{ event: CalendarEventBox }}
         onDoubleClickEvent={onDoubleClick}
         onSelectEvent={onSelect}
+        selectable={true}
+        onSelectSlot={onSelectSlot}
       />
       <CalendarModal />
       <FabAddNew />
+      <FabDelete />
     </>
   );
 };

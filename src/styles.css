@@ -57,3 +57,25 @@ a:hover {
   outline: none;
   box-shadow: 0 0 0 3px rgba(52, 124, 247, 0.5);
 }
+
+.fab-danger {
+  border-radius: 50%;
+  bottom: 25px;
+  position: fixed;
+  left: 25px;
+  right: auto;
+  width: 60px;
+  height: 60px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 0;
+  font-size: 24px;
+  color: white !important;
+}
+
+.fab-danger:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.5);
+}

@@ -18,7 +18,8 @@ export const useCalendarModal = () => {
   const { isDateModalOpen, closeDateModal } = useUiStore();
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formValues, setFormValues] = useState(initialFormValues());
-  const { activeEvent, startSavingEvent } = useCalendarStore();
+  const { activeEvent, startSavingEvent, clearActiveEvent } =
+    useCalendarStore();
 
   const tittleClass = useMemo(() => {
     if (!formSubmitted) return '';
@@ -53,6 +54,7 @@ export const useCalendarModal = () => {
 
   const onCloseModal = () => {
     closeDateModal();
+    clearActiveEvent();
   };
 
   const onSubmit = async (event) => {
@@ -74,6 +76,8 @@ export const useCalendarModal = () => {
 
     await startSavingEvent(formValues);
     closeDateModal();
+    clearActiveEvent();
+
     setFormSubmitted(false);
   };
 

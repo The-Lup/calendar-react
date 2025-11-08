@@ -1,12 +1,24 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { onAddNewEvent, onSetActiveEvent, onUpdateEvent } from '../store';
+import {
+  onAddNewEvent,
+  onClearActiveEvent,
+  onDeleteEvent,
+  onSetActiveEvent,
+  onUpdateEvent,
+} from '../store';
+import { useUiStore } from './useUiStore';
 
 export const useCalendarStore = () => {
   const dispatch = useDispatch();
   const { events, activeEvent } = useSelector((state) => state.calendar);
+  const { isDateModalOpen } = useUiStore();
 
   const setActiveEvent = (calendarEvent) => {
     dispatch(onSetActiveEvent(calendarEvent));
+  };
+
+  const clearActiveEvent = () => {
+    dispatch(onClearActiveEvent());
   };
 
   const startSavingEvent = async (calendarEvent) => {
@@ -22,13 +34,20 @@ export const useCalendarStore = () => {
     }
   };
 
+  const startDeletingEvent = () => {
+    //TODO REACH BACKEND
+    dispatch(onDeleteEvent());
+  };
   return {
     //Props
     activeEvent,
     events,
+    isDateModalOpen,
 
     //Methods
+    startDeletingEvent,
     setActiveEvent,
     startSavingEvent,
+    clearActiveEvent,
   };
 };
