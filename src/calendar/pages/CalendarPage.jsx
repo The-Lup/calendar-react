@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Calendar, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import {
@@ -8,8 +8,9 @@ import {
   FabDelete,
   Navbar,
 } from '../';
-import { localizer } from '../../helpers';
+import { localizer, stringToHslColor } from '../../helpers';
 import { useCalendarStore, useUiStore } from '../../hooks';
+import { LoadingSpinner } from '../components/LoadingSpinner';
 
 const getInitView = () => {
   const storedView = localStorage.getItem('lastView');
@@ -18,14 +19,26 @@ const getInitView = () => {
 
 export const CalendarPage = () => {
   const { openDateModal } = useUiStore();
-  const { events, setActiveEvent, clearActiveEvent } = useCalendarStore();
+  const {
+    events,
+    setActiveEvent,
+    clearActiveEvent,
+    startLoadingEvents,
+    isLoadingEvents,
+  } = useCalendarStore();
   const [currentView, setCurrentView] = useState(getInitView());
   const [currentDate, setCurrentDate] = useState(new Date());
 
+  useEffect(() => {
+    startLoadingEvents();
+  }, [startLoadingEvents]);
+
   // eslint-disable-next-line no-unused-vars
   const eventStyleGetter = (event, start, end, isSelected) => {
+    const color = stringToHslColor(event.user._id);
+
     const style = {
-      backgroundColor: '#347CF7',
+      backgroundColor: color,
       borderRadius: '0px',
       opacity: 0.8,
       color: 'white',
@@ -50,6 +63,10 @@ export const CalendarPage = () => {
     setCurrentView(newView);
     localStorage.setItem('lastView', newView);
   };
+
+  if (isLoadingEvents) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <>

@@ -1,25 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { addHours } from 'date-fns';
-
-const now = new Date();
-
-const tempEvent = {
-  _id: now.getTime(),
-  title: 'Buy a car',
-  notes: 'Need buy a cake',
-  start: new Date(now),
-  end: addHours(new Date(now, 2)),
-  bgcolor: '#fafafa',
-  user: {
-    _id: '123',
-    name: 'Lup',
-  },
-};
 
 export const calendarSlice = createSlice({
   name: 'calendar',
   initialState: {
-    events: [tempEvent],
+    isLoadingEvents: true,
+    events: [],
     activeEvent: null,
   },
   reducers: {
@@ -32,34 +17,28 @@ export const calendarSlice = createSlice({
     },
 
     onAddNewEvent: (state, { payload }) => {
-      const newEvent = {
-        ...payload,
-        start: new Date(payload.start),
-        end: new Date(payload.end),
-      };
-
-      state.events.push(newEvent);
+      state.events.push(payload);
       state.activeEvent = null;
     },
-    onUpdateEvent: (state, { payload }) => {
-      const updatedEvent = {
-        ...payload,
-        start: new Date(payload.start),
-        end: new Date(payload.end),
-      };
 
+    onUpdateEvent: (state, { payload }) => {
       state.events = state.events.map((event) => {
-        if (event._id === updatedEvent._id) {
+        if (event.id === payload.id) {
           return payload;
         }
-
         return event;
       });
     },
+
+    onLoadEvents: (state, { payload = [] }) => {
+      state.isLoadingEvents = false;
+      state.events = payload;
+    },
+
     onDeleteEvent: (state) => {
       if (state.activeEvent) {
         state.events = state.events.filter(
-          (event) => event._id !== state.activeEvent._id
+          (event) => event.id !== state.activeEvent.id
         );
         state.activeEvent = null;
       }
@@ -68,9 +47,10 @@ export const calendarSlice = createSlice({
 });
 
 export const {
-  onSetActiveEvent,
+  onAddNewEvent,
   onClearActiveEvent,
   onDeleteEvent,
-  onAddNewEvent,
+  onLoadEvents,
+  onSetActiveEvent,
   onUpdateEvent,
 } = calendarSlice.actions;

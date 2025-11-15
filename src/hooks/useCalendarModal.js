@@ -73,10 +73,7 @@ export const useCalendarModal = () => {
     }
 
     if (formValues.title.length <= 0) return;
-
     await startSavingEvent(formValues);
-    closeDateModal();
-    clearActiveEvent();
 
     setFormSubmitted(false);
   };
