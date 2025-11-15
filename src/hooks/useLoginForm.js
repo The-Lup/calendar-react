@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useAuthStore } from './useAuthStore';
 import { useForm } from './useForm';
 
 const loginFormFields = {
@@ -16,6 +17,7 @@ const loginValidations = {
 
 export const useLoginForm = () => {
   const [loginSubmitted, setLoginSubmitted] = useState(false);
+  const { startLogin } = useAuthStore();
 
   const {
     loginEmail,
@@ -26,14 +28,13 @@ export const useLoginForm = () => {
     loginPasswordValid,
   } = useForm(loginFormFields, loginValidations);
 
-  const loginSubmit = (e) => {
+  const loginSubmit = async (e) => {
     e.preventDefault();
     setLoginSubmitted(true);
 
     if (!isFormValid) return;
 
-    console.log({ loginEmail, loginPassword });
-    //TODO: APi LOGIN CALL LOGIC
+    await startLogin({ email: loginEmail, password: loginPassword });
   };
 
   return {
@@ -42,7 +43,7 @@ export const useLoginForm = () => {
     loginPassword,
     loginSubmitted,
 
-    // Validarions
+    // Validations
     isLoginFormValid: isFormValid,
     loginEmailValid,
     loginPasswordValid,

@@ -1,4 +1,7 @@
+import { useEffect, useMemo } from 'react';
+import Swal from 'sweetalert2';
 import { useLoginForm, useRegisterForm } from '../../hooks';
+import { useAuthStore } from '../../hooks/useAuthStore';
 import './LoginPage.css';
 
 export const LoginPage = () => {
@@ -25,6 +28,16 @@ export const LoginPage = () => {
     onRegisterInputChange,
     registerSubmit,
   } = useRegisterForm();
+
+  const { status, errorMessage, clearErrorMessage } = useAuthStore();
+  const isAuthenticating = useMemo(() => status === 'checking', [status]);
+
+  useEffect(() => {
+    if (errorMessage !== undefined) {
+      Swal.fire('Authentication Error', errorMessage, 'error');
+      clearErrorMessage();
+    }
+  }, [errorMessage, clearErrorMessage]);
 
   return (
     <div className="container login-container">
@@ -62,7 +75,12 @@ export const LoginPage = () => {
             </div>
 
             <div className="form-group mb-2">
-              <input type="submit" className="btnSubmit" value="Login" />
+              <input
+                type="submit"
+                className="btnSubmit"
+                value="Login"
+                disabled={isAuthenticating}
+              />
             </div>
           </form>
         </div>
@@ -133,6 +151,7 @@ export const LoginPage = () => {
                 type="submit"
                 className="btnSubmit"
                 value="Create Account"
+                disabled={isAuthenticating}
               />{' '}
             </div>
           </form>

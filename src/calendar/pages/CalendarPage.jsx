@@ -22,6 +22,7 @@ export const CalendarPage = () => {
   const [currentView, setCurrentView] = useState(getInitView());
   const [currentDate, setCurrentDate] = useState(new Date());
 
+  // eslint-disable-next-line no-unused-vars
   const eventStyleGetter = (event, start, end, isSelected) => {
     const style = {
       backgroundColor: '#347CF7',

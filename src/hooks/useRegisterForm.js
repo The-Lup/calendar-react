@@ -1,5 +1,6 @@
-// hooks/useRegisterForm.js
 import { useState } from 'react';
+import Swal from 'sweetalert2';
+import { useAuthStore } from './useAuthStore';
 import { useForm } from './useForm';
 
 const registerFormFields = {
@@ -24,6 +25,7 @@ const registerValidations = {
 
 export const useRegisterForm = () => {
   const [registerSubmitted, setRegisterSubmitted] = useState(false);
+  const { startRegister } = useAuthStore();
 
   const {
     registerName,
@@ -38,24 +40,22 @@ export const useRegisterForm = () => {
     registerPassword2Valid,
   } = useForm(registerFormFields, registerValidations);
 
-  const registerSubmit = (e) => {
+  const registerSubmit = async (e) => {
     e.preventDefault();
     setRegisterSubmitted(true);
 
     if (registerPassword !== registerPassword2) {
-      alert('Passwords do not match.');
+      Swal.fire('Error', 'Passwords do not match.', 'error');
       return;
     }
 
     if (!isFormValid) return;
 
-    console.log({
-      registerName,
-      registerEmail,
-      registerPassword,
-      registerPassword2,
+    await startRegister({
+      name: registerName,
+      email: registerEmail,
+      password: registerPassword,
     });
-    //TODO: API LOGIN CALL LOGIC
   };
 
   return {
