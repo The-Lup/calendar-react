@@ -122,6 +122,4 @@ This project is licensed under the MIT License.
 
 ## 👤 Author
 
-**Lu P.**
-
-Feel free to contribute or open issues to improve the project!
+Developed by **The-Lup** if you like this project, consider giving it a star on GitHub!
